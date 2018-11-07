@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssm.example.dao.StudentDAO">
+
+	<resultMap type="Student" id="studentMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="gender" column="gender" />
+		<result property="email" column="email" />
+		<result property="tel" column="tel" />
+		<result property="cla" column="cla" />
+	</resultMap>
+
+	<select id="findAll" resultMap="studentMap">
+		select * from student
+			where name like concat(concat('%',#{names}),'%')
+			order by id desc 
+			limit #{startRows},#{pageSize}
+	</select>
+	
+	<select id="getRowCount" resultType="int">
+		select count(*) from student
+	</select>
+	
+	<!-- 添加用户信息 -->
+	<insert id="addStudent">
+		insert into student(name,gender,email,tel,cla)
+		values(#{name},#{gender},#{email},#{tel},#{cla})
+	</insert>
+	
+	<!-- 根据主键修改用户信息 -->
+	<update id="updateStudentById" parameterType="com.ssm.example.entity.Student">
+		update student set 
+			name=#{name},
+			gender=#{gender},
+			email=#{email},
+			tel=#{tel},
+			cla=#{cla} 
+		where id=#{id}
+	</update>
+	
+	<!-- 根据主键查询用户信息 -->
+	<select id="selectUsersById" 
+		parameterType="Integer" 
+		resultType="com.ssm.example.entity.Student">
+		select * from student where id = #{id}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="deleteStudentById" parameterType="Integer">
+		DELETE FROM student WHERE id = #{id}
+	</delete>
+
+</mapper>
